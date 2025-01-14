@@ -5,4 +5,6 @@ capabilities.
 
 [x] - Simple map display
 
+[x] - Added custom simple icon
+
 [ ] - To be defined
