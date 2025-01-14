@@ -1,19 +1,22 @@
 "use client";
+import "leaflet/dist/leaflet.css";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 export default function Home() {
+	const position = [38.7071, -9.1354] as [number, number];
+
 	return (
 		<MapContainer
-			center={[51.505, -0.09]}
+			className="h-screen w-screen"
+			center={position}
 			zoom={13}
 			scrollWheelZoom={false}
-			style={{ height: "100vh" }}
 		>
 			<TileLayer
 				attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
-			<Marker position={[51.505, -0.09]}>
+			<Marker position={position}>
 				<Popup>
 					A pretty CSS3 popup. <br /> Easily customizable.
 				</Popup>
