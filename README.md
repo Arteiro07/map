@@ -9,6 +9,8 @@ capabilities.
 
 [x] - Add payload
 
+[ ] - Deploy payload to vercel
+
 [ ] - Add a simple "homepage"
 
 [ ] - Add simple page per marker

@@ -9,7 +9,7 @@
 		"start": "next start",
 		"lint": "next lint",
 		"payload": "payload",
-		"ci": "payload migrate && npm build"
+		"ci": "payload migrate && next build"
 	},
 	"dependencies": {
 		"@payloadcms/db-postgres": "^3.17.1",
