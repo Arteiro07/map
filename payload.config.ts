@@ -23,6 +23,7 @@ export default buildConfig({
 	collections: [Users, Markers],
 	editor: lexicalEditor(),
 	secret: process.env.PAYLOAD_SECRET || "",
+
 	typescript: {
 		outputFile: path.resolve(dirname, "payload-types.ts"),
 	},
