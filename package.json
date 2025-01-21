@@ -9,8 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@payloadcms/db-postgres": "^3.17.1",
+    "@payloadcms/next": "^3.17.1",
+    "@payloadcms/payload-cloud": "^3.17.1",
+    "@payloadcms/richtext-lexical": "^3.17.1",
+    "graphql": "^16.10.0",
     "leaflet": "^1.9.4",
     "next": "15.1.4",
+    "payload": "^3.17.1",
     "react": "^19.0.0-rc.1",
     "react-dom": "^19.0.0-rc.1",
     "react-leaflet": "^5.0.0-rc.2"

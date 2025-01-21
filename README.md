@@ -7,11 +7,11 @@ capabilities.
 
 [x] - Added custom simple icon
 
-[ ] - Add payload
-
-[ ] - Add simple page per marker
+[x] - Add payload
 
 [ ] - Add a simple "homepage"
+
+[ ] - Add simple page per marker
 
 [ ] - Add a simple footer possibly a navBar
 
