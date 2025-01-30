@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Users() {
-	return <div>Users</div>;
+	return <Link href="/posts">Posts</Link>;
 }

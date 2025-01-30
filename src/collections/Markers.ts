@@ -22,5 +22,4 @@ export const Markers: CollectionConfig = {
 			required: true,
 		},
 	],
-	upload: true,
 };
