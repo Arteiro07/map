@@ -7,19 +7,25 @@ export const Markers: CollectionConfig = {
 	},
 	fields: [
 		{
-			name: "alt",
-			type: "text",
-			required: true,
-		},
-		{
 			name: "title",
 			type: "text",
 			required: true,
 		},
 		{
 			name: "coordinates",
-			type: "text",
-			required: true,
+			type: "group",
+			fields: [
+				{
+					name: "latitude",
+					type: "number",
+					required: true,
+				},
+				{
+					name: "longitude",
+					type: "number",
+					required: true,
+				},
+			],
 		},
 	],
 };

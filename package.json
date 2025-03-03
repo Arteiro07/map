@@ -18,13 +18,17 @@
 		"@payloadcms/plugin-seo": "^3.20.0",
 		"@payloadcms/richtext-lexical": "^3.17.1",
 		"@payloadcms/storage-vercel-blob": "^3.20.0",
+		"@react-three/drei": "^10.0.3",
+		"@react-three/fiber": "^9.0.4",
+		"@types/three": "^0.174.0",
 		"graphql": "^16.10.0",
 		"leaflet": "^1.9.4",
 		"next": "15.1.4",
 		"payload": "^3.20.0",
 		"react": "^19.0.0-rc.1",
 		"react-dom": "^19.0.0-rc.1",
-		"react-leaflet": "^5.0.0-rc.2"
+		"react-leaflet": "^5.0.0-rc.2",
+		"three": "^0.174.0"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3",

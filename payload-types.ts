@@ -84,6 +84,7 @@ export interface Post {
     };
     [k: string]: unknown;
   };
+  Markers?: (number | Marker)[] | null;
   relatedPosts?: (number | Post)[] | null;
   meta?: {
     title?: string | null;
@@ -190,6 +191,20 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "markers".
+ */
+export interface Marker {
+  id: number;
+  title: string;
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -204,18 +219,6 @@ export interface User {
   loginAttempts?: number | null;
   lockUntil?: string | null;
   password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "markers".
- */
-export interface Marker {
-  id: number;
-  alt: string;
-  title: string;
-  coordinates: string;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -290,6 +293,7 @@ export interface PostsSelect<T extends boolean = true> {
   title?: T;
   heroImage?: T;
   content?: T;
+  Markers?: T;
   relatedPosts?: T;
   meta?:
     | T
@@ -321,9 +325,13 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "markers_select".
  */
 export interface MarkersSelect<T extends boolean = true> {
-  alt?: T;
   title?: T;
-  coordinates?: T;
+  coordinates?:
+    | T
+    | {
+        latitude?: T;
+        longitude?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

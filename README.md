@@ -11,6 +11,12 @@ capabilities.
 
 [x] - Deploy payload to vercel
 
+[x] - Markers appear on map
+
+[x] - Map to 3d on zoomOut
+
+[ ] - 3d to map on zoomIn
+
 [ ] - Add a simple "homepage"
 
 [ ] - Add simple page per marker
