@@ -196,6 +196,11 @@ export interface Media {
 export interface Marker {
   id: number;
   title: string;
+  year: number;
+  season: 'winter' | 'spring' | 'summer' | 'fall';
+  rating: number;
+  'Duration/days'?: number | null;
+  'Family/Alone/Friends'?: ('family' | 'alone' | 'friends') | null;
   coordinates: {
     latitude: number;
     longitude: number;
@@ -326,6 +331,11 @@ export interface UsersSelect<T extends boolean = true> {
  */
 export interface MarkersSelect<T extends boolean = true> {
   title?: T;
+  year?: T;
+  season?: T;
+  rating?: T;
+  'Duration/days'?: T;
+  'Family/Alone/Friends'?: T;
   coordinates?:
     | T
     | {

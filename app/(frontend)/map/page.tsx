@@ -16,6 +16,9 @@ export default async function Page() {
 			coordinates: true,
 			updatedAt: true,
 			createdAt: true,
+			rating: true,
+			year: true,
+			season: true,
 		},
 	});
 

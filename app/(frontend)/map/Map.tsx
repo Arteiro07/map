@@ -1,28 +1,39 @@
 "use client";
 import { Marker as MarkerType } from "@/payload-types";
-import { Icon, LatLngTuple } from "leaflet";
+import { ViewContext } from "@/src/context/viewContext";
+import { ZoomContext } from "@/src/context/zoomContext";
+import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useContext } from "react";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
-import ZoomControlls from "./ZoomControlls";
+import MapControlls from "./MapControlls";
 
-export default function Map({ markers }: { markers: MarkerType[] }) {
-	const startingPosition = [38.7071, -9.1354] as [number, number];
-	interface Location {
-		geocode: LatLngTuple;
-		popup: string;
-	}
-	console.log("cahskhaj");
-	console.log(markers);
+const getSeasonIcon = (season: string) => {
+	const colors = {
+		spring: "#77DD77", // Soft Green
+		summer: "#FFA500", // Bright Orange
+		autumn: "#D2691E", // Warm Brown
+		winter: "#1E90FF", // Cool Blue
+	};
 
-	const locations: Location[] = markers.map((marker) => ({
-		geocode: [marker.coordinates.latitude, marker.coordinates.longitude],
-		popup: marker.title,
-	}));
+	const color = colors[season as keyof typeof colors] || "black"; // Default to black if no season
 
-	const customIcon = new Icon({
-		iconUrl: "map_icon.svg",
+	// Encode the SVG as a Data URI
+	const svg = encodeURIComponent(`
+	  <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path d="M89 35C89 48.8071 77.8071 60 64 60C50.1929 60 39 48.8071 39 35C39 21.1929 50.1929 10 64 10C77.8071 10 89 21.1929 89 35Z" stroke="${color}" stroke-width="20"/>
+		<path d="M63.8919 62.8992L97 45L82.2069 81.4277L64.6545 128L31 45L63.8919 62.8992Z" fill="${color}"/>
+	  </svg>
+	`);
+
+	return new Icon({
+		iconUrl: `data:image/svg+xml,${svg}`, // Embed the SVG as a URL
 		iconSize: [38, 38],
 	});
+};
+export default function Map({ markers }: { markers: MarkerType[] }) {
+	const { coords } = useContext(ViewContext);
+	const { zoom } = useContext(ZoomContext);
 
 	return (
 		<>
@@ -32,23 +43,26 @@ export default function Map({ markers }: { markers: MarkerType[] }) {
 			></script>
 			<MapContainer
 				className="h-screen w-screen"
-				center={startingPosition}
-				zoom={11}
+				center={[coords.lattitude, coords.longitude]}
+				zoom={zoom}
 				scrollWheelZoom={true}
 			>
-				<ZoomControlls />
+				<MapControlls />
 				<TileLayer
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				/>
-				{locations.map((location) => {
+				{markers.map((marker) => {
 					return (
 						<Marker
-							key={location.geocode.toString()}
-							position={location.geocode}
-							icon={customIcon}
+							key={marker.id}
+							position={[
+								marker.coordinates.latitude,
+								marker.coordinates.longitude,
+							]}
+							icon={getSeasonIcon(marker.season)}
 						>
-							<Tooltip>{location.popup}</Tooltip>
+							<Tooltip>{marker.title}</Tooltip>
 						</Marker>
 					);
 				})}
