@@ -2,7 +2,9 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
-   CREATE TABLE IF NOT EXISTS "posts" (
+   CREATE TYPE "public"."enum_markers_season" AS ENUM('winter', 'spring', 'summer', 'fall');
+  CREATE TYPE "public"."enum_markers_family_alone_friends" AS ENUM('family', 'alone', 'friends');
+  CREATE TABLE IF NOT EXISTS "posts" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"title" varchar NOT NULL,
   	"hero_image_id" integer,
@@ -39,6 +41,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TABLE IF NOT EXISTS "markers" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"title" varchar NOT NULL,
+  	"year" numeric NOT NULL,
+  	"season" "enum_markers_season" NOT NULL,
+  	"rating" numeric NOT NULL,
+  	"duration_days" numeric,
+  	"family_alone_friends" "enum_markers_family_alone_friends",
   	"coordinates_latitude" numeric NOT NULL,
   	"coordinates_longitude" numeric NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
@@ -274,5 +281,7 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "payload_locked_documents_rels" CASCADE;
   DROP TABLE "payload_preferences" CASCADE;
   DROP TABLE "payload_preferences_rels" CASCADE;
-  DROP TABLE "payload_migrations" CASCADE;`)
+  DROP TABLE "payload_migrations" CASCADE;
+  DROP TYPE "public"."enum_markers_season";
+  DROP TYPE "public"."enum_markers_family_alone_friends";`)
 }
