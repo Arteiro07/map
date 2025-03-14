@@ -21,7 +21,7 @@ export default async function Page() {
 			season: true,
 		},
 	});
-
+	console.log(markers);
 	return (
 		<>
 			<MapRoom markers={markers.docs} />
