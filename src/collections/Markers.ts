@@ -47,14 +47,16 @@ export const Markers: CollectionConfig = {
 			required: true,
 		},
 		{
-			name: "Duration/days",
+			name: "duration",
 			type: "number",
 			max: 365,
 			min: 1,
+			required: true,
 		},
 		{
-			name: "Family/Alone/Friends",
+			name: "company",
 			type: "select",
+			required: true,
 			options: [
 				{
 					label: "Family",
@@ -86,6 +88,11 @@ export const Markers: CollectionConfig = {
 					required: true,
 				},
 			],
+		},
+		{
+			name: "post",
+			type: "relationship",
+			relationTo: "posts",
 		},
 	],
 };

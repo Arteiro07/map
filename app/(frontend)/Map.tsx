@@ -1,9 +1,11 @@
 "use client";
 import { Marker as MarkerType } from "@/payload-types";
+import { LayerContext } from "@/src/context/layerContext";
 import { ViewContext } from "@/src/context/viewContext";
 import { ZoomContext } from "@/src/context/zoomContext";
 import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import MapControlls from "./MapControlls";
@@ -34,6 +36,12 @@ const getSeasonIcon = (season: string) => {
 export default function Map({ markers }: { markers: MarkerType[] }) {
 	const { coords } = useContext(ViewContext);
 	const { zoom } = useContext(ZoomContext);
+	const router = useRouter();
+	const { layerType } = useContext(LayerContext);
+
+	const dayMap = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+	const nightMap =
+		"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 
 	return (
 		<>
@@ -46,12 +54,10 @@ export default function Map({ markers }: { markers: MarkerType[] }) {
 				center={[coords.lattitude, coords.longitude]}
 				zoom={zoom}
 				scrollWheelZoom={true}
+				worldCopyJump={true}
 			>
 				<MapControlls />
-				<TileLayer
-					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-				/>
+				<TileLayer url={layerType ? dayMap : nightMap} />
 				{markers.map((marker) => {
 					return (
 						<Marker
@@ -61,6 +67,11 @@ export default function Map({ markers }: { markers: MarkerType[] }) {
 								marker.coordinates.longitude,
 							]}
 							icon={getSeasonIcon(marker.season)}
+							eventHandlers={{
+								click: () => {
+									router.push(`/map/${marker.id}`);
+								},
+							}}
 						>
 							<Tooltip>{marker.title}</Tooltip>
 						</Marker>

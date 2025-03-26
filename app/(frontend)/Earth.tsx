@@ -1,10 +1,13 @@
 "use client";
 import { Marker as MarkerType } from "@/payload-types";
+import { LayerContext } from "@/src/context/layerContext";
 import { MapContext } from "@/src/context/mapContext";
+import { SortContext } from "@/src/context/sortContext";
 import { ViewContext } from "@/src/context/viewContext";
-import { OrbitControls, Stars } from "@react-three/drei";
+import { Html, OrbitControls, Stars } from "@react-three/drei";
 import { useFrame, useLoader } from "@react-three/fiber";
-import { useContext, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useContext, useRef, useState } from "react";
 import {
 	DoubleSide,
 	MathUtils,
@@ -13,6 +16,7 @@ import {
 	TextureLoader,
 	Vector3,
 } from "three";
+import Popup from "./Popup";
 
 const seasonColors: Record<string, string> = {
 	spring: "#77DD77", // Soft Green
@@ -26,6 +30,8 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 	const cloudsRef = useRef<Object3D>(null);
 	const { setIsGlobe } = useContext(MapContext);
 	const { coords, setCoords } = useContext(ViewContext);
+	const { layerType } = useContext(LayerContext);
+
 	const EarthCloudstexture = useLoader(
 		TextureLoader,
 		"textures/8k_earth_clouds.jpg"
@@ -37,6 +43,10 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 	const EarthDayTexture = useLoader(
 		TextureLoader,
 		"textures/8k_earth_daymap.jpg"
+	);
+	const EarthNightTexture = useLoader(
+		TextureLoader,
+		"textures/8k_earth_nightmap.jpg"
 	);
 	const EarthNormalTexture = useLoader(
 		TextureLoader,
@@ -51,25 +61,19 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 		camera.getWorldDirection(camDir);
 
 		// Project direction to sphere radius
-		const intersection = camPos.add(
-			camDir.multiplyScalar(-camPos.length() + 1)
-		);
 
 		// Convert (x, y, z) to Lat/Lng
-		let lat = 90 - MathUtils.radToDeg(Math.acos(intersection.y));
-		lat = MathUtils.clamp(lat, -90, 90);
+		const y = MathUtils.clamp(camDir.y, -1, 1);
+		let lat = -MathUtils.radToDeg(Math.asin(y));
 
-		let lng = MathUtils.radToDeg(Math.atan2(intersection.x, intersection.z));
-		lng = ((lng + 180) % 360) - 180;
+		let lng = MathUtils.radToDeg(Math.atan2(camDir.z, camDir.x));
+		lng = -((lng + 180) % 360) + 360;
 
-		setCoords({ lattitude: lat ? lat : 0, longitude: lng });
+		setCoords({ lattitude: lat, longitude: lng });
 		if (camera.position.length() < 1.6) {
 			setIsGlobe(false);
 		} else {
 		}
-	});
-	useFrame(({ camera }) => {
-		// setView position
 	});
 
 	useFrame(({ clock }) => {
@@ -110,7 +114,7 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 					<sphereGeometry args={[1, 32, 32]} />
 					<meshPhongMaterial specularMap={EarthSpecularTexture} />
 					<meshStandardMaterial
-						map={EarthDayTexture}
+						map={layerType === "night" ? EarthNightTexture : EarthDayTexture}
 						normalMap={EarthNormalTexture}
 						metalness={0.4}
 						roughness={0.7}
@@ -130,6 +134,11 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 }
 
 const Markers = ({ markers }: { markers: MarkerType[] }) => {
+	const { sortType } = useContext(SortContext);
+	const [showPopup, setShowPopup] = useState({ show: false, id: 0 });
+	const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const router = useRouter();
+
 	return (
 		<>
 			{markers.map((marker, index) => {
@@ -149,11 +158,51 @@ const Markers = ({ markers }: { markers: MarkerType[] }) => {
 				);
 
 				return (
-					<mesh key={index} position={position} quaternion={quaternion}>
+					<mesh
+						key={index}
+						position={position}
+						quaternion={quaternion}
+						onPointerEnter={(e) => {
+							if (timer.current) clearTimeout(timer.current);
+							setShowPopup({ show: true, id: index });
+						}}
+						onPointerLeave={() => {
+							timer.current = setTimeout(() => {
+								setShowPopup({ show: false, id: 0 });
+							}, 500);
+						}}
+						onClick={() => router.push(`/map/${marker.id}`)}
+					>
+						{showPopup.show && showPopup.id === index && (
+							<Html>
+								<div
+									className=""
+									onPointerEnter={(e) => {
+										if (timer.current) clearTimeout(timer.current);
+										setShowPopup({ show: true, id: index });
+									}}
+									onPointerLeave={() => {
+										timer.current = setTimeout(() => {
+											setShowPopup({ show: false, id: 0 });
+										}, 400);
+									}}
+								>
+									<Popup id={marker.id} message={marker.title} />
+								</div>
+							</Html>
+						)}
 						<cylinderGeometry
-							args={[0.005, 0.005, 0.05 * (1 + marker.rating / 10), 32]}
+							args={[
+								0.01,
+								0.01,
+								0.05 *
+									(1 +
+										(sortType === "rating" ? marker.rating : marker.duration) /
+											10),
+								32,
+							]}
 						/>
-						<meshLambertMaterial
+						<meshStandardMaterial
 							color={seasonColors[marker.season] || "#FFFFFF"}
 						/>
 					</mesh>

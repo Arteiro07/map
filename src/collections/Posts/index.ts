@@ -49,27 +49,6 @@ export const Posts: CollectionConfig = {
 				{
 					fields: [
 						{
-							name: "Markers",
-							type: "relationship",
-							admin: {
-								position: "sidebar",
-							},
-							filterOptions: ({ id }) => {
-								return {
-									id: {
-										not_in: [id],
-									},
-								};
-							},
-							hasMany: true,
-							relationTo: "markers",
-						},
-					],
-					label: "Markers",
-				},
-				{
-					fields: [
-						{
 							name: "relatedPosts",
 							type: "relationship",
 							admin: {

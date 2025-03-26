@@ -1,14 +1,36 @@
-"use client";
+import configPromise from "@payload-config";
+import { Metadata } from "next";
+import { getPayload } from "payload";
+import MapRoom from "./MapRoom";
 
-import "leaflet/dist/leaflet.css";
-import Link from "next/link";
-import Users from "./Users";
+export default async function Page() {
+	const payload = await getPayload({ config: configPromise });
 
-export default function Home() {
+	const markers = await payload.find({
+		collection: "markers",
+		depth: 1,
+		limit: 200,
+		overrideAccess: false,
+		select: {
+			title: true,
+			coordinates: true,
+			updatedAt: true,
+			createdAt: true,
+			rating: true,
+			year: true,
+			season: true,
+			duration: true,
+			company: true,
+		},
+	});
 	return (
 		<>
-			<Link href="/map">MAPS</Link>
-			<Users />
+			<MapRoom markers={markers.docs} />
 		</>
 	);
+}
+export function generateMetadata(): Metadata {
+	return {
+		title: `Payload Website Template Posts`,
+	};
 }

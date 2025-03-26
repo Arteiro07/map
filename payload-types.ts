@@ -84,7 +84,6 @@ export interface Post {
     };
     [k: string]: unknown;
   };
-  Markers?: (number | Marker)[] | null;
   relatedPosts?: (number | Post)[] | null;
   meta?: {
     title?: string | null;
@@ -191,25 +190,6 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "markers".
- */
-export interface Marker {
-  id: number;
-  title: string;
-  year: number;
-  season: 'winter' | 'spring' | 'summer' | 'fall';
-  rating: number;
-  'Duration/days'?: number | null;
-  'Family/Alone/Friends'?: ('family' | 'alone' | 'friends') | null;
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -224,6 +204,26 @@ export interface User {
   loginAttempts?: number | null;
   lockUntil?: string | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "markers".
+ */
+export interface Marker {
+  id: number;
+  title: string;
+  year: number;
+  season: 'winter' | 'spring' | 'summer' | 'fall';
+  rating: number;
+  duration: number;
+  company: 'family' | 'alone' | 'friends';
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  post?: (number | null) | Post;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -298,7 +298,6 @@ export interface PostsSelect<T extends boolean = true> {
   title?: T;
   heroImage?: T;
   content?: T;
-  Markers?: T;
   relatedPosts?: T;
   meta?:
     | T
@@ -334,14 +333,15 @@ export interface MarkersSelect<T extends boolean = true> {
   year?: T;
   season?: T;
   rating?: T;
-  'Duration/days'?: T;
-  'Family/Alone/Friends'?: T;
+  duration?: T;
+  company?: T;
   coordinates?:
     | T
     | {
         latitude?: T;
         longitude?: T;
       };
+  post?: T;
   updatedAt?: T;
   createdAt?: T;
 }
