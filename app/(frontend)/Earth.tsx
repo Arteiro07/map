@@ -29,7 +29,7 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 	const earthRef = useRef<Object3D>(null);
 	const cloudsRef = useRef<Object3D>(null);
 	const { setIsGlobe } = useContext(MapContext);
-	const { coords, setCoords } = useContext(ViewContext);
+	const { setCoords } = useContext(ViewContext);
 	const { layerType } = useContext(LayerContext);
 
 	const EarthCloudstexture = useLoader(
@@ -54,8 +54,6 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 	);
 
 	useFrame(({ camera }) => {
-		const camPos = camera.position.clone();
-
 		// Get camera direction (unit vector)
 		const camDir = new Vector3();
 		camera.getWorldDirection(camDir);
@@ -64,7 +62,7 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 
 		// Convert (x, y, z) to Lat/Lng
 		const y = MathUtils.clamp(camDir.y, -1, 1);
-		let lat = -MathUtils.radToDeg(Math.asin(y));
+		const lat = -MathUtils.radToDeg(Math.asin(y));
 
 		let lng = MathUtils.radToDeg(Math.atan2(camDir.z, camDir.x));
 		lng = -((lng + 180) % 360) + 360;
@@ -162,7 +160,7 @@ const Markers = ({ markers }: { markers: MarkerType[] }) => {
 						key={index}
 						position={position}
 						quaternion={quaternion}
-						onPointerEnter={(e) => {
+						onPointerEnter={() => {
 							if (timer.current) clearTimeout(timer.current);
 							setShowPopup({ show: true, id: index });
 						}}
@@ -177,7 +175,7 @@ const Markers = ({ markers }: { markers: MarkerType[] }) => {
 							<Html>
 								<div
 									className=""
-									onPointerEnter={(e) => {
+									onPointerEnter={() => {
 										if (timer.current) clearTimeout(timer.current);
 										setShowPopup({ show: true, id: index });
 									}}

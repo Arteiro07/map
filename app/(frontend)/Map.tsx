@@ -45,10 +45,10 @@ export default function Map({ markers }: { markers: MarkerType[] }) {
 
 	return (
 		<>
-			<script
+			{/* <script
 				src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 				integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-			></script>
+			></script> */}
 			<MapContainer
 				className="h-screen w-screen"
 				center={[coords.lattitude, coords.longitude]}

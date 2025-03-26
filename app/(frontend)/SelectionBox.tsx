@@ -6,8 +6,8 @@ import { useContext, useState } from "react";
 
 export default function SelectionBox({ markers }: { markers: MarkerType[] }) {
 	const { setSortType } = useContext(SortContext);
-	const { setFilter } = useContext(FilterContext);
-	const { layerType, setLayerType } = useContext(LayerContext);
+	//const { setFilter } = useContext(FilterContext);
+	const { setLayerType } = useContext(LayerContext);
 	const [showYears, setShowYears] = useState(false);
 	const [showSeasons, setShowSeasons] = useState(false);
 	const [showCompany, setShowCompany] = useState(false);

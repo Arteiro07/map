@@ -37,7 +37,7 @@ function MapDecider({ markers }: { markers: MarkerType[] }) {
 			);
 		});
 		setFilteredMarkers(auxMarkers);
-	}, [filter]);
+	}, [markers, filter]);
 
 	return (
 		<>

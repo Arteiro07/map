@@ -1,9 +1,18 @@
 import configPromise from "@payload-config";
 import { getPayload } from "payload";
 
-export default async function Page({ params }: { params: { posts: string } }) {
+type Params = Promise<{ posts: string }>;
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+export default async function Page(props: {
+	params: Params;
+	searchParams: SearchParams;
+}) {
 	const payload = await getPayload({ config: configPromise });
-	const { posts } = await params;
+	const params = await props.params;
+
+	const posts = Number(params.posts);
+
 	const marker = await payload.findByID({
 		collection: "markers",
 		id: posts,
