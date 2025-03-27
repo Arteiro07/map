@@ -6,7 +6,9 @@ import ContextProvider from "@/src/context/provider";
 import dynamic from "next/dynamic";
 import { useContext, useEffect, useState } from "react";
 import FiberCanvas from "./FiberCanvas";
-import SelectionBox from "./SelectionBox";
+//import SelectionBox from "./SelectionBox";
+const SelectionBox = dynamic(() => import("./SelectionBox"), { ssr: false });
+
 const Map = dynamic(() => import("./Map"), { ssr: false });
 
 export default function MapRoom({ markers }: { markers: MarkerType[] }) {

@@ -19,7 +19,6 @@ export default function MapControlls() {
 			}
 		},
 		moveend: (e) => {
-			console.log(e.target.getCenter());
 			setCoords({
 				lattitude: e.target.getCenter().lat,
 				longitude: e.target.getCenter().lng,

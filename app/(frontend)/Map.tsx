@@ -33,15 +33,20 @@ const getSeasonIcon = (season: string) => {
 		iconSize: [38, 38],
 	});
 };
+
+export const LAYER = ["day", "night", "satelite"];
+const layer = {
+	day: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+	satelite:
+		"https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+	night: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+};
+
 export default function Map({ markers }: { markers: MarkerType[] }) {
 	const { coords } = useContext(ViewContext);
 	const { zoom } = useContext(ZoomContext);
 	const router = useRouter();
 	const { layerType } = useContext(LayerContext);
-
-	const dayMap = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-	const nightMap =
-		"https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 
 	return (
 		<>
@@ -57,7 +62,7 @@ export default function Map({ markers }: { markers: MarkerType[] }) {
 				worldCopyJump={true}
 			>
 				<MapControlls />
-				<TileLayer url={layerType ? dayMap : nightMap} />
+				<TileLayer url={layer[layerType as keyof typeof layer]} />
 				{markers.map((marker) => {
 					return (
 						<Marker

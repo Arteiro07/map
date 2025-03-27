@@ -25,6 +25,12 @@ const seasonColors: Record<string, string> = {
 	winter: "#1E90FF", // Cool Blue
 };
 
+export const LAYERS3D = ["day", "night"];
+const EARTH_TEXTURES = {
+	day: "textures/8k_earth_daymap.jpg",
+	night: "textures/8k_earth_nightmap.jpg",
+};
+
 export default function Earth({ markers }: { markers: MarkerType[] }) {
 	const earthRef = useRef<Object3D>(null);
 	const cloudsRef = useRef<Object3D>(null);
@@ -32,6 +38,11 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 	const { setCoords } = useContext(ViewContext);
 	const { layerType } = useContext(LayerContext);
 
+	const selectedTexture = useLoader(
+		TextureLoader,
+		EARTH_TEXTURES[layerType as keyof typeof EARTH_TEXTURES] ||
+			EARTH_TEXTURES.day
+	);
 	const EarthCloudstexture = useLoader(
 		TextureLoader,
 		"textures/8k_earth_clouds.jpg"
@@ -39,14 +50,6 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 	const EarthSpecularTexture = useLoader(
 		TextureLoader,
 		"textures/8k_earth_specular_map.jpg"
-	);
-	const EarthDayTexture = useLoader(
-		TextureLoader,
-		"textures/8k_earth_daymap.jpg"
-	);
-	const EarthNightTexture = useLoader(
-		TextureLoader,
-		"textures/8k_earth_nightmap.jpg"
 	);
 	const EarthNormalTexture = useLoader(
 		TextureLoader,
@@ -112,7 +115,7 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 					<sphereGeometry args={[1, 32, 32]} />
 					<meshPhongMaterial specularMap={EarthSpecularTexture} />
 					<meshStandardMaterial
-						map={layerType === "night" ? EarthNightTexture : EarthDayTexture}
+						map={selectedTexture}
 						normalMap={EarthNormalTexture}
 						metalness={0.4}
 						roughness={0.7}

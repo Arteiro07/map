@@ -13,9 +13,6 @@ export default function FiberCanvas({ markers }: { markers: MarkerType[] }) {
 	const longitude = (coords.longitude + 180) % 360;
 	const lngRad = MathUtils.degToRad(longitude);
 
-	console.log(coords.lattitude);
-	console.log(longitude);
-
 	const initialPosition = new Vector3().setFromSphericalCoords(
 		1.7,
 		latRad,
