@@ -1,5 +1,6 @@
 "use client";
 import { Marker as MarkerType } from "@/payload-types";
+import { ActiveMarkerContext } from "@/src/context/activeMarkerContext";
 import { LayerContext } from "@/src/context/layerContext";
 import { ViewContext } from "@/src/context/viewContext";
 import { ZoomContext } from "@/src/context/zoomContext";
@@ -7,7 +8,7 @@ import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
-import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import MapControlls from "./MapControlls";
 
 const getSeasonIcon = (season: string) => {
@@ -34,12 +35,14 @@ const getSeasonIcon = (season: string) => {
 	});
 };
 
-export const LAYER = ["day", "night", "satelite"];
+export const LAYER = ["day", "night", "satelite", "nightLights"];
 const layer = {
 	day: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 	satelite:
 		"https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
 	night: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+	nightLights:
+		"https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default/2023-01-01/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpg",
 };
 
 export default function Map({ markers }: { markers: MarkerType[] }) {
@@ -47,7 +50,7 @@ export default function Map({ markers }: { markers: MarkerType[] }) {
 	const { zoom } = useContext(ZoomContext);
 	const router = useRouter();
 	const { layerType } = useContext(LayerContext);
-
+	const { setActiveMarker } = useContext(ActiveMarkerContext);
 	return (
 		<>
 			{/* <script
@@ -74,12 +77,10 @@ export default function Map({ markers }: { markers: MarkerType[] }) {
 							icon={getSeasonIcon(marker.season)}
 							eventHandlers={{
 								click: () => {
-									router.push(`/map/${marker.id}`);
+									setActiveMarker(marker);
 								},
 							}}
-						>
-							<Tooltip>{marker.title}</Tooltip>
-						</Marker>
+						></Marker>
 					);
 				})}
 			</MapContainer>

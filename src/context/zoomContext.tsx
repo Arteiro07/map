@@ -16,7 +16,7 @@ interface ZoomProviderProps {
 }
 
 const ZoomProvider: React.FC<ZoomProviderProps> = ({ children }) => {
-	const [zoom, setZoom] = useState(11);
+	const [zoom, setZoom] = useState(3);
 
 	return (
 		<ZoomContext.Provider value={{ zoom, setZoom }}>

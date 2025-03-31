@@ -1,13 +1,13 @@
 "use client";
 import { Marker as MarkerType } from "@/payload-types";
+import { ActiveMarkerContext } from "@/src/context/activeMarkerContext";
 import { LayerContext } from "@/src/context/layerContext";
 import { MapContext } from "@/src/context/mapContext";
 import { SortContext } from "@/src/context/sortContext";
 import { ViewContext } from "@/src/context/viewContext";
-import { Html, OrbitControls, Stars } from "@react-three/drei";
+import { OrbitControls, Stars } from "@react-three/drei";
 import { useFrame, useLoader } from "@react-three/fiber";
-import { useRouter } from "next/navigation";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
 	DoubleSide,
 	MathUtils,
@@ -16,7 +16,6 @@ import {
 	TextureLoader,
 	Vector3,
 } from "three";
-import Popup from "./Popup";
 
 const seasonColors: Record<string, string> = {
 	spring: "#77DD77", // Soft Green
@@ -136,9 +135,8 @@ export default function Earth({ markers }: { markers: MarkerType[] }) {
 
 const Markers = ({ markers }: { markers: MarkerType[] }) => {
 	const { sortType } = useContext(SortContext);
-	const [showPopup, setShowPopup] = useState({ show: false, id: 0 });
-	const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-	const router = useRouter();
+	const { setActiveMarker } = useContext(ActiveMarkerContext);
+	const [hover, setHover] = useState(false);
 
 	return (
 		<>
@@ -158,40 +156,23 @@ const Markers = ({ markers }: { markers: MarkerType[] }) => {
 					normal
 				);
 
+				useEffect(() => {
+					document.body.style.cursor = hover ? "pointer" : "auto";
+				}, [hover]);
+
 				return (
 					<mesh
 						key={index}
 						position={position}
 						quaternion={quaternion}
-						onPointerEnter={() => {
-							if (timer.current) clearTimeout(timer.current);
-							setShowPopup({ show: true, id: index });
+						onClick={() => setActiveMarker(marker)}
+						onPointerOver={() => {
+							setHover(true);
 						}}
-						onPointerLeave={() => {
-							timer.current = setTimeout(() => {
-								setShowPopup({ show: false, id: 0 });
-							}, 500);
+						onPointerOut={() => {
+							setHover(false);
 						}}
-						onClick={() => router.push(`/map/${marker.id}`)}
 					>
-						{showPopup.show && showPopup.id === index && (
-							<Html>
-								<div
-									className=""
-									onPointerEnter={() => {
-										if (timer.current) clearTimeout(timer.current);
-										setShowPopup({ show: true, id: index });
-									}}
-									onPointerLeave={() => {
-										timer.current = setTimeout(() => {
-											setShowPopup({ show: false, id: 0 });
-										}, 400);
-									}}
-								>
-									<Popup id={marker.id} message={marker.title} />
-								</div>
-							</Html>
-						)}
 						<cylinderGeometry
 							args={[
 								0.01,

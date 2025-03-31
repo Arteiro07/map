@@ -19,8 +19,8 @@ interface ViewProviderProps {
 
 const ViewProvider: React.FC<ViewProviderProps> = ({ children }) => {
 	const [coords, setCoords] = useState({
-		lattitude: 38.7071,
-		longitude: -9.1354,
+		lattitude: 0, //25.7071,
+		longitude: 0, //-9.1354,
 	});
 
 	return (

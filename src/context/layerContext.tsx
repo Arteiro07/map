@@ -6,7 +6,7 @@ interface LayerContextProps {
 	setLayerType: (sortType: string) => void;
 }
 const LayerContextPropsDefault: LayerContextProps = {
-	layerType: "day",
+	layerType: "satelite",
 	setLayerType: () => {},
 };
 const LayerContext = createContext<LayerContextProps>(LayerContextPropsDefault);
@@ -16,7 +16,7 @@ interface LayerProviderProps {
 }
 
 const LayerProvider: React.FC<LayerProviderProps> = ({ children }) => {
-	const [layerType, setLayerType] = useState("day");
+	const [layerType, setLayerType] = useState("satelite");
 
 	return (
 		<LayerContext.Provider value={{ layerType, setLayerType }}>

@@ -11,13 +11,17 @@ export default function SelectionBox({ markers }: { markers: MarkerType[] }) {
 	const { setSortType } = useContext(SortContext);
 	//const { setFilter } = useContext(FilterContext);
 	const { isGlobe } = useContext(MapContext);
-	const { setLayerType } = useContext(LayerContext);
+	const { layerType, setLayerType } = useContext(LayerContext);
 	const [showYears, setShowYears] = useState(false);
 	const [showSeasons, setShowSeasons] = useState(false);
 	const [showCompany, setShowCompany] = useState(false);
 
 	return (
 		<div className="absolute top-4 right-4 bg-gray-600 p-3 rounded shadow-lg z-[1000]">
+			{/* 
+	FILTERS:
+*/}
+
 			<div>Filter:</div>
 			<div>
 				<button
@@ -79,6 +83,9 @@ export default function SelectionBox({ markers }: { markers: MarkerType[] }) {
 				)}
 			</div>
 
+			{/* 
+	SORT:
+*/}
 			<div>
 				<label>Sort:</label>
 				<select
@@ -91,11 +98,16 @@ export default function SelectionBox({ markers }: { markers: MarkerType[] }) {
 					<option value={"duration"}>Duration</option>
 				</select>
 			</div>
+
+			{/* 
+	LAYERS:
+*/}
 			<label>Base Layer:</label>
 			<select
 				onChange={(e) => {
 					setLayerType(e.target.value);
 				}}
+				value={layerType}
 				className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 			>
 				{(isGlobe ? LAYERS3D : LAYER).map((layer) => (
